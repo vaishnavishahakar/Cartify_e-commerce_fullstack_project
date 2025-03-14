@@ -20,7 +20,14 @@ app.get("/health", (req, res) => {
     res.json({
         success: true,
         message: "Server is running",
-    })
+    });
+});
+
+app.use("*", (req, res) => {
+    res.status(404).json({
+        success: true,
+        message: "API endpoint doesn't exist",
+    });
 });
 
 const PORT = process.env.PORT || 5000;
