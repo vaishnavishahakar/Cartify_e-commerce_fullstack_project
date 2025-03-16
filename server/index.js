@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
+import bcrypt from "bcrypt";
 
 import User from "./models/User.js";
 
@@ -59,13 +60,15 @@ app.post("/signup", async (req, res) => {
       .json({ success: false, message: "Address is required" });
   }
 
+  const salt = bcrypt.genSaltSync(10);
+
   try{
     const newUser = new User({
         name,
         email,
         phone, 
         address,
-        password,
+        password: bcrypt.hashSync(password, salt),
     });
 
     const savedUser = await newUser.save();
