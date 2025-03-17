@@ -3,7 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
-import { postSignup } from "./controllers/user.js";
+import { postSignup, postLogin } from "./controllers/user.js";
 
 const app = express();
 app.use(express.json());
@@ -26,6 +26,7 @@ app.get("/health", (req, res) => {
 });
 
 app.post("/signup", postSignup);
+app.post ("/login", postLogin);
 
 app.use("*", (req, res) => {
   res.status(404).json({
