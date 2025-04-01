@@ -5,7 +5,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { postSignup, postLogin } from "./controllers/user.js";
-import { jwtVerifyMiddleware } from "./middlewares/auth.js";
+//import { jwtVerifyMiddleware } from "./middlewares/auth.js";
+import { postProducts } from "./controllers/product.js";
 
 const app = express();
 app.use(express.json());
@@ -27,22 +28,12 @@ app.get("/health", (req, res) => {
   });
 });
 
+// Auth API's
 app.post("/signup", postSignup);
 app.post ("/login", postLogin);
 
-app.post("/order", jwtVerifyMiddleware, (req, res) => {
-  res.json({
-    success: true,
-    message: "Order placed successfully",
-  });
-});
-
-app.post("/payment", jwtVerifyMiddleware, (req, res) => {
-  res.json({
-    success: true,
-    message: "Payment successful",
-  });
-});
+// Product API's
+app.post("/products", postProducts);
 
 app.use("*", (req, res) => {
   res.status(404).json({
