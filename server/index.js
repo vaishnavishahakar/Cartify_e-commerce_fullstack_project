@@ -4,36 +4,12 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
-import jwt from "jsonwebtoken";
-
 import { postSignup, postLogin } from "./controllers/user.js";
+import { jwtVerifyMiddleware } from "./middlewares/auth.js";
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-
-const jwtVerifyMiddleware = async(req, res, next) => {
-  const jwtToken = req.headers.authorization.split(" ")[1];
-
-  if (!jwtToken) {
-    return res.status(401).json({
-      success: false,
-      message: "JWT token is missing",
-    });
-  }
-
-  try{
-    const decoded = await jwt.verify(jwtToken, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  }
-  catch(error){
-    return res.status(401).json({
-      success: false,
-      message: "Invalid JWT token",
-    });
-  }
-}
 
 //connect to mongoDB
 const connectDB = async () => {
