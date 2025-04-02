@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { postSignup, postLogin } from "./controllers/user.js";
-//import { jwtVerifyMiddleware } from "./middlewares/auth.js";
+import { jwtVerifyMiddleware, checkRoleMiddleware } from "./middlewares/auth.js";
 import { postProducts } from "./controllers/product.js";
 
 const app = express();
@@ -33,7 +33,7 @@ app.post("/signup", postSignup);
 app.post ("/login", postLogin);
 
 // Product API's
-app.post("/products", postProducts);
+app.post("/products", jwtVerifyMiddleware, checkRoleMiddleware, postProducts);
 
 app.use("*", (req, res) => {
   res.status(404).json({

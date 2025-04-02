@@ -1,3 +1,5 @@
+import Product from "../models/Product.js";
+
 const postProducts = async (req, res) =>{
  const {
     name, 
@@ -19,6 +21,32 @@ const postProducts = async (req, res) =>{
             message: `${field} is required`
         });
     }
+ }
+
+ const newProduct = new Product({
+    name, 
+    shortDescription, 
+    longDescription, 
+    price, 
+    currentPrice, 
+    category, 
+    images, 
+    tags
+ });
+
+ try{
+    const savedProduct = await newProduct.save();
+
+    return res.json({
+        success: true,
+        message: "Product created successfully",
+        data: savedProduct
+    });
+ }
+ catch(e){
+    return res.status(400).json({
+        success: false, message: e.message
+    });
  }
 };
 
