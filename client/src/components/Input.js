@@ -11,7 +11,7 @@ function Input({ label, val, onChange, placeholder = "", type = "text" }) {
         placeholder={placeholder}
         id={inputId}
         className="px-2 py-1 border border-gray-300 rounded-md w-full 
-        focus:outline-none mb-4 text-lg"
+        focus:outline-none mb-2 text-lg"
         value={val}
         onChange={(e) => onChange(e.target.value)}
       />
