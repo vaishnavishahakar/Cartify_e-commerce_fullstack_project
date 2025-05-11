@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { getCurrentUser } from "../utils/Common";
 
 function Signup() {
   const [signupData, setSignupData] = useState({
@@ -48,10 +49,20 @@ function Signup() {
     }
   };
 
- 
+  useEffect(() => {
+    // Check if user is already logged in
+    const currentUser = getCurrentUser();
+
+    if (currentUser) {
+      toast.success("You are already logged in. Redirecting to dashboard...");
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 3000);
+    }
+  }, []);
 
   return (
-    <div className="bg-zinc-100 min-h-screen flex flex-col items-center justify-center px-5">
+    <div className="min-h-screen flex flex-col items-center justify-center px-5">
       <h1 className="text-2xl mb-4 text-gray-600">Signup</h1>
 
       <div className="w-full md:w-[450px] bg-white rounded-2xl shadow-lg hover:shadow-xl px-10 py-6">
