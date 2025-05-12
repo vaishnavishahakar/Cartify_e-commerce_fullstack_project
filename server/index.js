@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import mongoose, { get } from "mongoose";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -14,9 +14,11 @@ import {
   putOrders,
 } from "./controllers/order.js";
 import { postPayments } from "./controllers/Payment.js";
+import { responder } from "./utils/utils.js";
 
 const app = express();
 app.use(express.json());
+
 app.use(cors());
 
 //connect to mongoDB

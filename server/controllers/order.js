@@ -1,4 +1,5 @@
 import Order from "../models/Order.js";
+import { responder } from "../utils/utils.js";
 
 const postOrders = async (req, res) => {
   const { products, deliveryAddress, phone, paymentMode } = req.body;
@@ -28,22 +29,14 @@ const postOrders = async (req, res) => {
 
     const savedOrder = await newOrder.save();
 
-    return res.json({
-      success: true,
-      message: "Order placed successfully",
-      data: savedOrder,
-    });
+    return responder(res, true, "Order placed successfully", savedOrder, 201);
   } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    return responder(res, false, error.message, null, 400);
   }
 };
 
 const putOrders = async (req, res) => {
   const user = req.user;
-  console.log(user);
   const { id } = req.params;
 
   let order;
@@ -52,33 +45,33 @@ const putOrders = async (req, res) => {
     order = await Order.findById(id);
 
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
+        return responder(res, false, "Order not found", null, 404);
     }
   } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    return responder(res, false, error.message, null, 400);
   }
 
   // user can only update his own orde
   if (user.role == "user" && order.userId != user._id) {
-    return res.status(401).json({
-      success: false,
-      message: "You are not authorized to update this order",
-    });
+    return responder(
+        res,
+        false,
+        "You are not authorized to update this order",
+        null,
+        401
+      );
   }
 
   //user can only cancel the order if it is not delivered
   if (user.role == "user") {
     if (order.status == "delivered") {
-      return res.status(400).json({
-        success: false,
-        message: "Order has already been delivered",
-      });
+        return responder(
+            res,
+            false,
+            "Order has already been delivered",
+            null,
+            400
+          );
     }
 
     if (req.body.status == "cancelled") {
@@ -103,11 +96,69 @@ const putOrders = async (req, res) => {
 
   const updatedOrder = await Order.findById(id);
 
-  return res.json({
-    success: true,
-    message: "Order updated successfully",
-    data: updatedOrder,
-  });
+  return responder(res, true, "Order updated successfully", updatedOrder, 200);
 };
 
-export { postOrders, putOrders };
+const getOrderById = async (req, res) => {
+    const user = req.user;
+    const { id } = req.params;
+
+    let order;
+
+    try {
+        order = await Order.findById(id)
+        .populate("userId", "name email")
+        .populate(
+            "products.productId",
+            "-shortDescription -longDescription -image -category -tags -__v -createdAt -updatedAt"
+        )
+        .populate("paymentId", "-__v -createdAt -updatedAt");
+
+        if (!order) {
+            return responder(res, false, "Order not found", null, 404);
+        }
+    } catch (error) {
+        return responder(res, false, error.message, null, 400);
+    }
+
+    if (user._id != order.userId && user.role != "admin") {
+        return responder(
+          res,
+          false,
+          "You are not authorized to view this order",
+          null,
+          401
+        );
+      }
+    
+      return responder(res, true, "Order fetched successfully", order, 200);
+};
+
+const getOrdersByUserId = async (req, res) => {
+    const { id } = req.params;
+    const user = req.user;
+
+    if (user.role != "admin" && user._id != id) {
+        return responder(
+          res,
+          false,
+          "You are not authorized to view this orders",
+          null,
+          401
+        );
+      }
+
+      const orders = await Order.find({ userId: id })
+    .sort({ createdAt: -1 })
+    .populate("userId", "name email")
+    .populate(
+      "products.productId",
+      "-shortDescription -longDescription -image -category -tags -__v -createdAt -updatedAt"
+    )
+    .populate("paymentId", "-__v -createdAt -updatedAt");
+
+  return responder(res, true, "Orders fetched successfully", orders, 200);
+}
+
+
+export { postOrders, putOrders, getOrderById, getOrdersByUserId };
