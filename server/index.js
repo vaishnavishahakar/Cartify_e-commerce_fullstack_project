@@ -1,12 +1,19 @@
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
+import mongoose, { get } from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
 import { postSignup, postLogin } from "./controllers/user.js";
 import { jwtVerifyMiddleware, checkRoleMiddleware } from "./middlewares/auth.js";
-import { postProducts } from "./controllers/product.js";
+import { postProducts, getProducts } from "./controllers/product.js";
+import {
+  getOrderById,
+  getOrdersByUserId,
+  postOrders,
+  putOrders,
+} from "./controllers/order.js";
+import { postPayments } from "./controllers/Payment.js";
 
 const app = express();
 app.use(express.json());
@@ -22,10 +29,7 @@ const connectDB = async () => {
 };
 
 app.get("/health", (req, res) => {
-  res.json({
-    success: true,
-    message: "Server is running",
-  });
+  return responder(res, true, "Server is running");
 });
 
 // Auth API's
@@ -34,12 +38,19 @@ app.post ("/login", postLogin);
 
 // Product API's
 app.post("/products", jwtVerifyMiddleware, checkRoleMiddleware, postProducts);
+app.get("/products", getProducts);
+
+// Order API's
+app.post("/orders", jwtVerifyMiddleware, postOrders);
+app.put("/orders/:id", jwtVerifyMiddleware, putOrders);
+app.get("/orders/:id", jwtVerifyMiddleware, getOrderById);
+app.get("/orders/user/:id", jwtVerifyMiddleware, getOrdersByUserId);
+
+// Payment API's
+app.post("/payments", postPayments);
 
 app.use("*", (req, res) => {
-  res.status(404).json({
-    success: true,
-    message: "API endpoint doesn't exist",
-  });
+  return responder(res, false, "API endpoint doesn't exist", null, 404);
 });
 
 const PORT = process.env.PORT || 5000;

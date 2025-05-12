@@ -50,4 +50,41 @@ const postProducts = async (req, res) =>{
  }
 };
 
-export { postProducts };
+const getProducts = async (req, res) => {
+   const { limit } = req.query;
+
+  let { search } = req.query;
+
+  search = search.replaceAll("\\", "");
+
+  const products = await Product.find({
+    $or: [
+      {
+        name: {
+          $regex: new RegExp(search || ""),
+          $options: "i",
+        },
+      },
+      {
+        shortDescription: {
+          $regex: new RegExp(search || ""),
+          $options: "i",
+        },
+      },
+      {
+        longDescription: {
+          $regex: new RegExp(search || ""),
+          $options: "i",
+        },
+      },
+    ],
+  }).limit(parseInt(limit || 100));
+
+   return res.json({
+         success: true,
+         data: products,
+         message: "Products fetched successfully"
+      });
+}
+
+export { postProducts, getProducts };
