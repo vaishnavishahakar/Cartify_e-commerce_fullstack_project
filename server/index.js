@@ -5,7 +5,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { postSignup, postLogin } from "./controllers/user.js";
-import { jwtVerifyMiddleware, checkRoleMiddleware } from "./middlewares/auth.js";
+import {
+  jwtVerifyMiddleware,
+  checkRoleMiddleware,
+} from "./middlewares/auth.js";
 import { postProducts, getProducts } from "./controllers/product.js";
 import {
   getOrderById,
@@ -19,7 +22,12 @@ import { responder } from "./utils/utils.js";
 const app = express();
 app.use(express.json());
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 //connect to mongoDB
 const connectDB = async () => {
@@ -30,13 +38,13 @@ const connectDB = async () => {
   }
 };
 
-app.get("/health", (req, res) => {
+app.get("/health", jwtVerifyMiddleware, (req, res) => {
   return responder(res, true, "Server is running");
 });
 
 // Auth API's
 app.post("/signup", postSignup);
-app.post ("/login", postLogin);
+app.post("/login", postLogin);
 
 // Product API's
 app.post("/products", jwtVerifyMiddleware, checkRoleMiddleware, postProducts);
