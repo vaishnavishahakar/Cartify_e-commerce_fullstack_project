@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 
 // check authentication (to check user has login or not)
 const jwtVerifyMiddleware = async(req, res, next) => {
+ 
     const jwtToken = req.headers?.authorization?.split(" ")[1];
   
     if (!jwtToken) {
@@ -40,4 +41,4 @@ const jwtVerifyMiddleware = async(req, res, next) => {
     next();
   }
 
-  export { jwtVerifyMiddleware, checkRoleMiddleware }
+  export { jwtVerifyMiddleware, checkRoleMiddleware };

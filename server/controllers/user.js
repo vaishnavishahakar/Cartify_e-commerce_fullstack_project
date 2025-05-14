@@ -50,7 +50,7 @@ const postSignup = async (req, res) => {
 
     return res.json({
       success: true,
-      message: "Signup successful",
+      message: "Signup successful, please login",
       data: {
         name: savedUser.name,
         email: savedUser.email,
@@ -81,7 +81,7 @@ const postLogin = async (req, res) => {
       .json({ success: false, message: "Email and password is required" });
   }
 
-  const user = await User.findOne({email});
+  const user = await User.findOne({ email });
 
   if(!user) {
     return res

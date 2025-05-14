@@ -39,7 +39,8 @@ const postProducts = async (req, res) => {
     category,
     images,
     tags,
-  });
+  }
+  ) ;
 
   try {
     const savedProduct = await newProduct.save();
@@ -94,4 +95,4 @@ const getProducts = async (req, res) => {
   });
 };
 
-export { postProducts, getProducts };
+export { getProducts, postProducts };

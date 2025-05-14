@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import express from "express";
+import session from "express-session";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
@@ -29,6 +31,13 @@ app.use(
   })
 );
 
+app.use(
+  session({
+    secret: "test secret",
+    cookie: { maxAge: 60000 },
+  })
+);
+
 //connect to mongoDB
 const connectDB = async () => {
   const conn = await mongoose.connect(process.env.MONGO_URI);
@@ -39,6 +48,7 @@ const connectDB = async () => {
 };
 
 app.get("/health", jwtVerifyMiddleware, (req, res) => {
+  req.session.user = { id: "1", name: "Test" };
   return responder(res, true, "Server is running");
 });
 

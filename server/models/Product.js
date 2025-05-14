@@ -29,12 +29,11 @@ const productSchema = new Schema({
     required: true,
   },
   tags: {
-    type: [String]
-  },
+    type: [String],
+  }
 }, {
-    timestamps: true,
+  timestamps: true,
 });
-
 
 const Product = model("Product", productSchema);
 
