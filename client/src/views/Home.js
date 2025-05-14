@@ -3,6 +3,8 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import ProductCard from "../components/ProductCard";
 import ImgHeader from "./e-commerce-header.png";
+import IcoCart from "./../assets/shopping-cart.png";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -44,6 +46,14 @@ function Home() {
           return <ProductCard key={product._id} {...product} />;
         })}
       </div>
+
+      <Link to="/user/cart">
+        <img
+          src={IcoCart}
+          alt="Shopping Cart"
+          className="fixed top-10 right-10 w-14 h-14 cursor-pointer"
+        />
+      </Link>
       <Toaster />
     </div>
   );
