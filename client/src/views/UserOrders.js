@@ -7,8 +7,8 @@ import {
   getReadableTimestamp,
   api,
 } from "../utils/Common";
-import axios from "axios";
-// import jwt from "jsonwebtoken";
+// import axios from "axios";
+//  import jwt from "jsonwebtoken";
 
 function UserOrders() {
   const [user, setUser] = useState({});
