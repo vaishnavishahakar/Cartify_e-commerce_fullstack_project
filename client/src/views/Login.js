@@ -3,7 +3,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { getCurrentUser } from "../utils/Common";
+import { getCurrentUser, api } from "../utils/Common";
 import axios from "axios";
 
 function Login() {
@@ -18,10 +18,7 @@ function Login() {
     toast.loading("Plaease wait...");
 
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/login`,
-        loginData
-      );
+      const response = await api.post(`/login`,loginData);
 
       localStorage.setItem("e-commerce-user-token", response.data.token);
       localStorage.setItem(

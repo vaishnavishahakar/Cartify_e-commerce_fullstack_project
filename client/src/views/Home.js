@@ -13,7 +13,7 @@ function Home() {
   const loadProducts = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/products?limit=100&search=`
+        `${process.env.REACT_APP_API_URL}/products?limit=100&search=${search}`
       );
       setProducts(response.data.data);
     } catch (error) {
@@ -23,7 +23,7 @@ function Home() {
 
   useEffect(() => {
     loadProducts();
-  }, []);
+  }, [search]);
 
   return (
     <div>

@@ -3,12 +3,9 @@ import toast from "react-hot-toast";
 import OrderCard from "../components/OrderCard";
 import {
   getCurrentUser,
-  getJwtToken,
   getReadableTimestamp,
   api,
 } from "../utils/Common";
-// import axios from "axios";
-//  import jwt from "jsonwebtoken";
 
 function UserOrders() {
   const [user, setUser] = useState({});
@@ -20,13 +17,12 @@ function UserOrders() {
       return;
     }
     try {
-      const response = await api.get(`/orders/user/${user._id}`, {
-        headers: {
-          Authorization: getJwtToken(),
-        },
-      });
+      const response = await api.get(
+        `/orders/user/${user._id}`
+      );
+
       setOrders(response.data?.data || []);
-      console.log("Orders loaded successfully:", response.data?.data);
+      
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to load orders");
     }
