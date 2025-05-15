@@ -48,12 +48,14 @@ function Home() {
       </div>
 
       <Link to="/user/cart">
+       <div className="fixed top-20 right-5 w-10 h-10 bg-white rounded-full flex justify-center items-center shadow-md">
         <img
           src={IcoCart}
           alt="Shopping Cart"
-          className="fixed top-10 right-10 w-14 h-14 cursor-pointer"
+          className="w-5 h-5 object-contain"
         />
-      </Link>
+      </div>
+     </Link>
       <Toaster />
     </div>
   );

@@ -60,13 +60,18 @@ const postSignup = async (req, res) => {
     });
   } catch (error) {
     if (error.message.includes("duplicate key error")) {
-    return res.status(400)
-    .json({ success: false, 
-      message: `${Object.keys(error.keyValue)} '${Object.values(error.keyValue)}' already exists` });
-  }
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: `${Object.keys(error.keyValue)} '${Object.values(
+            error.keyValue
+          )}' already exists`,
+        });
+    }
     return res.status(400).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -83,36 +88,39 @@ const postLogin = async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  if(!user) {
+  if (!user) {
     return res
       .status(400)
-      .json({ success: false, message: "Please signup first before logging in" });
+      .json({
+        success: false,
+        message: "Please signup first before logging in",
+      });
   }
 
   const isPasswordMatch = bcrypt.compareSync(password, user.password);
 
   const userDetails = {
-    email: user.email, 
+    email: user.email,
     role: user.role,
     name: user.name,
     _id: user._id,
   };
 
-  if(isPasswordMatch) {
+  if (isPasswordMatch) {
     const jwtToken = jwt.sign(userDetails, process.env.JWT_SECRET);
 
     res.setHeader("Authorization", `Bearer ${jwtToken}`);
+    res.cookie("jwt", jwtToken, { httpOnly: true, secure: true }); // Recommended for security
 
     req.session.jwtToken = jwtToken;
 
-    return res.json({ 
-        success: true,
-        token: jwtToken, 
-        data: userDetails,
-        message: "Login successful" 
+    return res.json({
+      success: true,
+      token: jwtToken,
+      data: userDetails,
+      message: "Login successful",
     });
-  }
-  else {
+  } else {
     return res
       .status(400)
       .json({ success: false, message: "Invalid credentials" });

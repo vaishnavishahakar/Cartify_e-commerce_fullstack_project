@@ -53,8 +53,8 @@ function Cart() {
 
     return (
       <div
-        className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex 
-        justify-center items-center z-50"
+        className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex
+       justify-center items-center z-50"
         onClick={onClose}
       >
         <div
@@ -109,49 +109,114 @@ function Cart() {
     );
   };
 
+  //   const placeOrder = async () => {
+  //   try {
+  //     const orderBody = {
+  //       products: cart.map((product) => ({
+  //         productId: product.productId,
+  //         quantity: product.quantity,
+  //         price: product.price,
+  //       })),
+  //       deliveryAddress: address,
+  //       paymentMode: paymentMode,
+  //       phone: phone,
+  //     };
+  //     console.log("JWT Token:", getJwtToken());
+
+  //     const response = await axios.post(
+  //       `${process.env.REACT_APP_API_URL}/orders`,
+  //       orderBody,
+  //       {
+  //         headers: {
+
+  //           Authorization: getJwtToken(),
+  //         },
+  //       }
+
+  //     );
+  //     console.log("API Response:", response);
+
+  //     toast.success("Order Placed Successfully");
+
+  //     localStorage.removeItem("cart");
+  //     setTimeout(() => {
+  //       window.location.href = "/user/orders";
+  //     }, 2000);
+  //   } catch (error) {
+  //     console.error("Error placing order:", error);
+  //     toast.error("Failed to place order. Please try again.");
+  //   }
+  // };
   const placeOrder = async () => {
-    const orderBody = {
-      products: cart.map((product) => ({
-        productId: product.productId,
-        quantity: product.quantity,
-        price: product.price,
-      })),
-      deliveryAddress: address,
-      paymentMode: paymentMode,
-      phone: phone,
-    };
+    try {
+      const jwtToken = getJwtToken();
 
-    const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}/orders`,
-      orderBody,
-      {
-        headers: {
-          Authorization: getJwtToken(),
-        },
+      if (!jwtToken) {
+        toast.error("You need to log in before placing an order.");
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000);
+        return;
       }
-    );
 
-    toast.success("Order Placed Successfully");
+      const orderBody = {
+        products: cart.map((product) => ({
+          productId: product?.productId,
+          quantity: product?.quantity,
+          price: product?.price,
+        })),
+        deliveryAddress: address,
+        paymentMode: paymentMode,
+        phone: phone,
+      };
 
-    localStorage.removeItem("cart");
-    setTimeout(() => {
-      window.location.href = "/user/orders";
-    }, 2000);
+      console.log(
+        "Final Order Body Before API Call:",
+        JSON.stringify(orderBody, null, 2)
+      ); // Debug order body
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/orders`,
+        orderBody,
+        {
+          headers: {
+            Authorization: jwtToken,
+          },
+        }
+      );
+
+      console.log("API Response:", response);
+
+      toast.success("Order Placed Successfully");
+      toast.success("Payment Successful");
+
+      localStorage.removeItem("cart");
+      setTimeout(() => {
+        window.location.href = "/user/orders";
+      }, 2000);
+    } catch (error) {
+      console.error("Error placing order:", error);
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to place order. Please try again."
+      );
+    }
   };
 
   const PaymentDialog = ({ isPaymentOpen, onClose }) => {
     if (!isPaymentOpen) return null;
 
     return (
-      <div className="fixed top-0 left-0 w-full h-full bg-white flex 
-      justify-center z-60">
+      <div
+        className="fixed top-0 left-0 w-full h-full bg-white flex
+     justify-center z-60"
+      >
         <div className="bg-white p-10 rounded-lg w-[400px]">
           <h1 className="text-2xl mb-5">Complete Your Payment</h1>
 
           <Button
             label="Complete Payment"
             onClick={() => {
-              toast.success("Payment Successful");
               placeOrder();
             }}
             variant="primary"
@@ -173,7 +238,7 @@ function Cart() {
           return (
             <div
               className="bg-white shadow-lg rounded-lg overflow-hidden m-5
-                    px-10 py-5 w-full md:w-2/3 relative flex"
+                   px-10 py-5 w-full md:w-2/3 relative flex"
               key={productId}
             >
               <img

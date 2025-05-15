@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import OrderCard from "../components/OrderCard";
-import {
-  getCurrentUser,
-  getReadableTimestamp,
-  api,
-} from "../utils/Common";
+import { getCurrentUser, getReadableTimestamp, api } from "../utils/Common";
 
 function UserOrders() {
   const [user, setUser] = useState({});
@@ -17,12 +13,9 @@ function UserOrders() {
       return;
     }
     try {
-      const response = await api.get(
-        `/orders/user/${user._id}`
-      );
+      const response = await api.get(`/orders/user/${user._id}`);
 
       setOrders(response.data?.data || []);
-      
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to load orders");
     }
@@ -97,22 +90,22 @@ function UserOrders() {
           <p>Phone: {phone}</p>
           <p>Status: {status}</p>
 
-          {products.map((product) => {
-            const { productId, quantity, price } = product;
-            const { name, images } = productId;
+            {products.map((product) => {
+              const { productId, quantity, price } = product;
+              const { name, images } = productId;
 
-            return (
+              return (
               <div className="flex items-center mt-3 space-x-10 pt-2 pb-2 pl-2 mb-4 shadow-md border border-gray-200 rounded-md">
                 <img src={images[0]} alt={name} className="w-20 h-20" />
-                <div>
+                  <div>
                   <p>{name}</p>
                   <p>
-                    ₹{price} x {quantity}
-                  </p>
+                      ₹{price} x {quantity}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
 
           <p className="text-lg font-bold mt-3 border-t-2 pt-4">
             Bill Amount: ₹{totalBill}
@@ -123,24 +116,26 @@ function UserOrders() {
   };
 
   return (
-    <div>
-      <h1>My Orders</h1>
-      <p>
-        Current user: {user.name} - {user.email}
-      </p>
-      <div>
-        {orders.map((order) => {
-          return (
-            <OrderCard
-              key={order._id}
-              order={order}
-              onClick={() => {
-                setSelectedOrder(order);
-                setIsDialogOpen(true);
-              }}
-            />
-          );
-        })}
+    <div className="relative p-6">
+      {/* Current User Display - Positioned at Top Right */}
+      <div className="absolute top-4 right-6 bg-gray-100 px-4 py-2 rounded-md shadow-md text-lg">
+        <p className="font-semibold text-gray-700">{user.name}</p>
+        <p className="text-gray-500">{user.email}</p>
+      </div>
+
+      <h1 className="text-2xl font-bold mb-6 text-center">My Orders</h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {orders.map((order) => (
+          <OrderCard
+            key={order._id}
+            order={order}
+            onClick={() => {
+              setSelectedOrder(order);
+              setIsDialogOpen(true);
+            }}
+          />
+        ))}
       </div>
 
       <OrderViewDialog

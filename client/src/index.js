@@ -9,43 +9,69 @@ import NotFound from './views/404';
 import Dashboard from './views/Dashboard';
 import UserOrders from './views/UserOrders';
 import Cart from './views/Cart';
+import Navbar from './components/Navbar'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
+
 const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Home />,
-  },
-  {
-    path: '/signup',
-    element: <Signup />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/dashboard',
-    element: <Dashboard />,
-  },
-  {
-    path: "/user/orders",
-    element: <UserOrders />,
-  },
-  {
-    path: "/user/cart",
-    element: <Cart />,
-  },
-  {
-    path: '*',
+ {
+   path: '/',
+   element:
+     <>
+       <Navbar />
+       <Home />,
+     </>
+ },
+ {
+   path: '/signup',
+   element:
+     <>
+       <Navbar />
+       <Signup />
+     </>,
+ },
+ {
+   path: '/login',
+   element:
+     <>
+       <Navbar />
+       <Login />
+     </>,
+ },
+ {
+   path: '/dashboard',
+   element:
+     <>
+       <Navbar />
+       <Dashboard />
+     </>,
+ },
+ {
+   path: "/user/orders",
+   element:
+     <>
+       <Navbar />
+       <UserOrders />
+     </>,
+ },
+ {
+   path: "/user/cart",
+   element:
+     <>
+       <Navbar /><Cart />
+     </>,
+ },
+ {
+   path: '*',
     element: <NotFound />,
-  },
+ },
 ]);
 
+
 root.render(
-  <div className='bg-zinc-100 min-h-screen'>
-    <RouterProvider router={router} />
-  </div>
+ <div className='bg-zinc-100 min-h-screen'>
+   <RouterProvider router={router} />
+ </div>
 );
 
