@@ -17,7 +17,7 @@ import {
   postOrders,
   putOrders,
 } from "./controllers/order.js";
-import { postPayments } from "./controllers/Payment.js";
+import { postPayments } from "./controllers/payment.js";
 import { responder } from "./utils/utils.js";
 
 const app = express();
