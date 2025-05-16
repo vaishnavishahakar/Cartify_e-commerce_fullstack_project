@@ -109,44 +109,7 @@ function Cart() {
     );
   };
 
-  //   const placeOrder = async () => {
-  //   try {
-  //     const orderBody = {
-  //       products: cart.map((product) => ({
-  //         productId: product.productId,
-  //         quantity: product.quantity,
-  //         price: product.price,
-  //       })),
-  //       deliveryAddress: address,
-  //       paymentMode: paymentMode,
-  //       phone: phone,
-  //     };
-  //     console.log("JWT Token:", getJwtToken());
 
-  //     const response = await axios.post(
-  //       `${process.env.REACT_APP_API_URL}/orders`,
-  //       orderBody,
-  //       {
-  //         headers: {
-
-  //           Authorization: getJwtToken(),
-  //         },
-  //       }
-
-  //     );
-  //     console.log("API Response:", response);
-
-  //     toast.success("Order Placed Successfully");
-
-  //     localStorage.removeItem("cart");
-  //     setTimeout(() => {
-  //       window.location.href = "/user/orders";
-  //     }, 2000);
-  //   } catch (error) {
-  //     console.error("Error placing order:", error);
-  //     toast.error("Failed to place order. Please try again.");
-  //   }
-  // };
   const placeOrder = async () => {
     try {
       const jwtToken = getJwtToken();
@@ -173,7 +136,7 @@ function Cart() {
       console.log(
         "Final Order Body Before API Call:",
         JSON.stringify(orderBody, null, 2)
-      ); // Debug order body
+      ); 
 
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/orders`,
