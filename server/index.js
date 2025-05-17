@@ -35,19 +35,19 @@ app.options("*", cors()); // handle preflight requests
 app.use(cookieParser());
 
 // Session Setup (still using MemoryStore)
-// app.use(
-//   session({
-//     secret: "test secret",
-//     cookie: { maxAge: 1000 * 60 * 60, httpOnly: false, secure: false },
-//   })
-// );
+app.use(
+  session({
+    secret: "test secret",
+    cookie: { maxAge: 1000 * 60 * 60, httpOnly: false, secure: false },
+  })
+);
 
-res.cookie("test secret", token, {
-  httpOnly: true,
-  secure: true,
-  sameSite: 'None',
-  maxAge: 60 * 60 * 1000, // 1 hour
-});
+// res.cookie("test secret", token, {
+//   httpOnly: true,
+//   secure: true,
+//   sameSite: 'None',
+//   maxAge: 60 * 60 * 1000, // 1 hour
+// });
 
 
 
