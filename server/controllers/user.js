@@ -111,7 +111,7 @@ const postLogin = async (req, res) => {
 
     res.setHeader("Authorization", `Bearer ${jwtToken}`);
     res.cookie("jwt", jwtToken, { httpOnly: true, secure: true }); // Recommended for security
-
+    
     req.session.jwtToken = jwtToken;
 
     return res.json({

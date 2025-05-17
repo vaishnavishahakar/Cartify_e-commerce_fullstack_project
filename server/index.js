@@ -36,14 +36,10 @@ app.options("*", cors()); // handle preflight requests
 app.use(
   session({
     secret: "test secret",
-    cookie: {
-      maxAge: 1000 * 60 * 60, // 1 hour
-      httpOnly: true,
-      secure: true, // only works on HTTPS
-      sameSite: "None", // required for cross-origin cookies
-    },
+    cookie: { maxAge: 1000 * 60 * 60, httpOnly: false, secure: false },
   })
 );
+
 
 // MongoDB Connection
 const connectDB = async () => {
