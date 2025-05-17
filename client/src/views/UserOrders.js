@@ -8,18 +8,23 @@ function UserOrders() {
   const [orders, setOrders] = useState([]);
 
   const loadUserOrders = async () => {
-    if (!user?._id) {
-      toast.error("User not found");
-      return;
-    }
-    try {
-      const response = await api.get(`/orders/user/${user._id}`);
+  if (!user?._id) {
+    toast.error("User not found");
+    return;
+  }
 
-      setOrders(response.data?.data || []);
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to load orders");
-    }
-  };
+  try {
+    const response = await api.get(`/orders/user/${user._id}`, {
+      withCredentials: true, // ⬅️ IMPORTANT for sending cookies/session
+    });
+
+    setOrders(response.data?.data || []);
+  } catch (error) {
+    console.error("Load orders error:", error);
+    toast.error(error.response?.data?.message || "Failed to load orders");
+  }
+};
+
 
   useEffect(() => {
     const user = getCurrentUser();

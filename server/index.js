@@ -19,6 +19,8 @@ import {
 } from "./controllers/order.js";
 import { postPayments } from "./controllers/payment.js";
 import { responder } from "./utils/utils.js";
+import cookieParser from 'cookie-parser';
+app.use(cookieParser());
 
 const app = express();
 app.use(express.json());
@@ -33,12 +35,20 @@ app.use(cors({
 app.options("*", cors()); // handle preflight requests
 
 // Session Setup (still using MemoryStore)
-app.use(
-  session({
-    secret: "test secret",
-    cookie: { maxAge: 1000 * 60 * 60, httpOnly: false, secure: false },
-  })
-);
+// app.use(
+//   session({
+//     secret: "test secret",
+//     cookie: { maxAge: 1000 * 60 * 60, httpOnly: false, secure: false },
+//   })
+// );
+
+res.cookie("jwt", token, {
+  httpOnly: true,
+  secure: true,
+  sameSite: 'None',
+  maxAge: 60 * 60 * 1000, // 1 hour
+});
+
 
 
 // MongoDB Connection
