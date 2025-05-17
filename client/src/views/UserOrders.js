@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import OrderCard from "../components/OrderCard";
-import { getCurrentUser, getReadableTimestamp, api } from "../utils/Common";
+import { getCurrentUser, getJwtToken, getReadableTimestamp, api } from "../utils/Common";
 
 function UserOrders() {
   const [user, setUser] = useState({});
