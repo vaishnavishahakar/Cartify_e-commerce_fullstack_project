@@ -20,11 +20,10 @@ import {
 import { postPayments } from "./controllers/payment.js";
 import { responder } from "./utils/utils.js";
 import cookieParser from 'cookie-parser';
-app.use(cookieParser());
+
 
 const app = express();
 app.use(express.json());
-
 // CORS Setup
 app.use(cors({
   origin: ['https://rtc-e-commerce-project.vercel.app', 'http://localhost:3000'],
@@ -33,6 +32,7 @@ app.use(cors({
 }));
 
 app.options("*", cors()); // handle preflight requests
+app.use(cookieParser());
 
 // Session Setup (still using MemoryStore)
 // app.use(
@@ -42,7 +42,7 @@ app.options("*", cors()); // handle preflight requests
 //   })
 // );
 
-res.cookie("jwt", token, {
+res.cookie("test secret", token, {
   httpOnly: true,
   secure: true,
   sameSite: 'None',
