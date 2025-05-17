@@ -15,7 +15,10 @@ function UserOrders() {
 
   try {
     const response = await api.get(`/orders/user/${user._id}`, {
-      withCredentials: true, // ⬅️ IMPORTANT for sending cookies/session
+        headers: {
+    Authorization: getJwtToken(),
+  },
+      withCredentials: true, 
     });
 
     setOrders(response.data?.data || []);

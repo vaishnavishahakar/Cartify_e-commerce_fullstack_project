@@ -42,14 +42,6 @@ app.use(
   })
 );
 
-// res.cookie("test secret", token, {
-//   httpOnly: true,
-//   secure: true,
-//   sameSite: 'None',
-//   maxAge: 60 * 60 * 1000, // 1 hour
-// });
-
-
 
 // MongoDB Connection
 const connectDB = async () => {
