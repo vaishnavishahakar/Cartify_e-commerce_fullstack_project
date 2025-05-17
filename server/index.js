@@ -30,10 +30,7 @@ app.use(express.json());
 //   })
 // );
 app.use(
-  cors({
-    origin: ["https://rtc-e-commerce-project.vercel.app"],
-    credentials: true,
-  })
+  cors()
 );
 
 app.use(
