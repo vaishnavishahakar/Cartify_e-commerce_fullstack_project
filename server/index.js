@@ -31,7 +31,7 @@ app.use(express.json());
 // );
 app.use(
   cors({
-    origin: ["http://localhost:3000, https://e-commerce-project-frontend-kms6.onrender.com"],
+    origin: ["http://localhost:3000"],
     credentials: true,
   })
 );
