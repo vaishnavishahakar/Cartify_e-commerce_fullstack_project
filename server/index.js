@@ -40,11 +40,19 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true // if you send cookies/auth headers
 }));
+// Allow preflight requests for all routes
+app.options("*", cors());
 
 app.use(
   session({
     secret: "test secret",
-    cookie: { maxAge: 1000 * 60 * 60, httpOnly: false, secure: false },
+   cookie: { 
+  maxAge: 1000 * 60 * 60, 
+  httpOnly: true, // prevents client-side JS from accessing the cookie
+  secure: true,   // ensures cookie is only sent over HTTPS
+  sameSite: 'None' // needed for cross-site requests when credentials: true
+}
+
   })
 );
 
