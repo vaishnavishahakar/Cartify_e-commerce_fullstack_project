@@ -25,18 +25,17 @@ app.use(express.json());
 
 // CORS Setup
 app.use(cors({
-  origin: 'https://rtc-e-commerce-project.vercel.app',
+  origin: ['https://rtc-e-commerce-project.vercel.app', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 }));
+
 app.options("*", cors()); // handle preflight requests
 
 // Session Setup (still using MemoryStore)
 app.use(
   session({
     secret: "test secret",
-    resave: false,
-    saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60, // 1 hour
       httpOnly: true,
