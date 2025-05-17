@@ -110,7 +110,13 @@ const postLogin = async (req, res) => {
     const jwtToken = jwt.sign(userDetails, process.env.JWT_SECRET);
 
     res.setHeader("Authorization", `Bearer ${jwtToken}`);
-    res.cookie("jwt", jwtToken, { httpOnly: true, secure: true }); 
+    // res.cookie("jwt", jwtToken, { httpOnly: true, secure: true }); 
+    res.cookie("jwt", jwtToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+    maxAge: 60 * 60 * 1000,
+    });
     
     req.session.jwtToken = jwtToken;
 

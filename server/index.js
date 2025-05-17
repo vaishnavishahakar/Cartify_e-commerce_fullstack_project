@@ -30,7 +30,6 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 }));
-
 app.options("*", cors()); // handle preflight requests
 app.use(cookieParser());
 
@@ -38,10 +37,12 @@ app.use(cookieParser());
 app.use(
   session({
     secret: "test secret",
-    cookie: { maxAge: 1000 * 60 * 60, httpOnly: false, secure: false },
+    cookie: { 
+      maxAge: 1000 * 60 * 60, 
+      httpOnly: false, 
+      secure: false },
   })
 );
-
 
 // MongoDB Connection
 const connectDB = async () => {
