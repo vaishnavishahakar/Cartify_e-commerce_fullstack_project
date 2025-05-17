@@ -23,68 +23,56 @@ import { responder } from "./utils/utils.js";
 const app = express();
 app.use(express.json());
 
-// app.use(
-//   cors({
-//     origin: "http://localhost:3000",
-//     credentials: true,
-//   })
-// );
-// app.use(
-//   cors({
-//     origin: ["https://rtc-e-commerce-project.vercel.app"],
-//     credentials: true,
-//   })
-// );
+// CORS Setup
 app.use(cors({
   origin: 'https://rtc-e-commerce-project.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true // if you send cookies/auth headers
+  credentials: true,
 }));
-// Allow preflight requests for all routes
-app.options("*", cors());
+app.options("*", cors()); // handle preflight requests
 
+// Session Setup (still using MemoryStore)
 app.use(
   session({
     secret: "test secret",
-   cookie: { 
-  maxAge: 1000 * 60 * 60, 
-  httpOnly: true, // prevents client-side JS from accessing the cookie
-  secure: true,   // ensures cookie is only sent over HTTPS
-  sameSite: 'None' // needed for cross-site requests when credentials: true
-}
-
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60, // 1 hour
+      httpOnly: true,
+      secure: true, // only works on HTTPS
+      sameSite: "None", // required for cross-origin cookies
+    },
   })
 );
 
-//connect to mongoDB
+// MongoDB Connection
 const connectDB = async () => {
-  const conn = await mongoose.connect(process.env.MONGO_URI);
-
-  if (conn) {
-    console.log(`MongoDB connected successfully`);
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB connected successfully");
+  } catch (err) {
+    console.error("MongoDB connection failed:", err.message);
+    process.exit(1);
   }
 };
 
+// Routes
 app.get("/health", jwtVerifyMiddleware, (req, res) => {
   return responder(res, true, "Server is running");
 });
 
-
-// Auth API's
 app.post("/signup", postSignup);
 app.post("/login", postLogin);
 
-// Product API's
 app.post("/products", jwtVerifyMiddleware, checkRoleMiddleware, postProducts);
 app.get("/products", getProducts);
 
-// Order API's
 app.post("/orders", jwtVerifyMiddleware, postOrders);
 app.put("/orders/:id", jwtVerifyMiddleware, putOrders);
 app.get("/orders/:id", jwtVerifyMiddleware, getOrderById);
 app.get("/orders/user/:id", jwtVerifyMiddleware, getOrdersByUserId);
 
-// Payment API's
 app.post("/payments", postPayments);
 
 app.use("*", (req, res) => {
@@ -93,7 +81,11 @@ app.use("*", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  connectDB();
-});
+const startServer = async () => {
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+};
+
+startServer();
