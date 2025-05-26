@@ -10,12 +10,20 @@ import Dashboard from "./views/Dashboard";
 import UserOrders from "./views/UserOrders";
 import Cart from "./views/Cart";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 // Layout Component to keep Navbar consistent
 const Layout = () => (
-  <>
+  // <>
+  //   <Navbar />
+  //   <Outlet />
+  // </>
+   <>
     <Navbar />
-    <Outlet />
+    <div className="min-h-[calc(100vh-160px)]">
+      <Outlet />
+    </div>
+    <Footer />
   </>
 );
 
@@ -43,3 +51,5 @@ root.render(
     <RouterProvider router={router} />
   </div>
 );
+
+     

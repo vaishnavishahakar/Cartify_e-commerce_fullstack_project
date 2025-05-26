@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import OrderCard from "../components/OrderCard";
 import { getCurrentUser, getJwtToken, getReadableTimestamp, api } from "../utils/Common";
@@ -7,11 +7,16 @@ function UserOrders() {
   const [user, setUser] = useState({});
   const [orders, setOrders] = useState([]);
 
-  const loadUserOrders = async () => {
-  if (!user?._id) {
-    toast.error("User not found");
-    return;
-  }
+  // const loadUserOrders = async () => {
+  // if (!user?._id) {
+  //   toast.error("User not found");
+  //   return;
+  // }
+  const loadUserOrders = useCallback(async () => {
+    if (!user?._id) {
+      toast.error("User not found");
+      return;
+    }
 
   try {
     const response = await api.get(`/orders/user/${user._id}`, {
@@ -23,16 +28,15 @@ function UserOrders() {
 
     setOrders(response.data?.data || []);
   } catch (error) {
-    console.error("Load orders error:", error);
     toast.error(error.response?.data?.message || "Failed to load orders");
   }
-};
+}, [user?._id]);
 
 
   useEffect(() => {
-    const user = getCurrentUser();
-    if (user) {
-      setUser(user);
+    const currentUser = getCurrentUser();
+    if (currentUser) {
+      setUser(currentUser);
     } else {
       toast.error("Please login to access this page");
       setTimeout(() => {
@@ -43,10 +47,9 @@ function UserOrders() {
 
   useEffect(() => {
     if (user && user._id) {
-      console.log("User found:", user);
       loadUserOrders();
     }
-  }, [user]);
+  }, [user, loadUserOrders]);
 
   useEffect(() => {
     if (orders.length > 0) {

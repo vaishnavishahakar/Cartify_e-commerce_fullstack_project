@@ -10,10 +10,15 @@ function OrderCard({ order, onClick }) {
       onClick={onClick}
     >
       <p>
-        Order ID: {_id}, Ordered On: {getReadableTimestamp(createdAt)}
+        Order ID: {_id}, <br/> Ordered On: {getReadableTimestamp(createdAt)}
       </p>
       <p className="text-lg font-bold- mt-3">
-        {products.map((product) => product.productId.name).join(", ")}
+        {products
+          .map(
+            (product) =>
+              (product.productId && product.productId.name) || "Unknown Product"
+          )
+          .join(", ")}
       </p>
       <p>Total Amount: ₹{totalBill}</p>
       <p>Address: {deliveryAddress}</p>

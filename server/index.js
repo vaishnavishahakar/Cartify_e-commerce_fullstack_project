@@ -37,6 +37,8 @@ app.use(cookieParser());
 app.use(
   session({
     secret: "test secret",
+    resave: false,    
+    saveUninitialized: false,
     cookie: { 
       maxAge: 1000 * 60 * 60, 
       httpOnly: false, 
@@ -48,9 +50,7 @@ app.use(
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("MongoDB connected successfully");
   } catch (err) {
-    console.error("MongoDB connection failed:", err.message);
     process.exit(1);
   }
 };
@@ -82,7 +82,6 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   await connectDB();
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
   });
 };
 

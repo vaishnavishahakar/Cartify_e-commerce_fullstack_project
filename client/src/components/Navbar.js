@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getCurrentUser, logout } from '../utils/Common'; // Assuming this path
+import { getCurrentUser, logout } from '../utils/Common'; 
 import { useNavigate } from 'react-router-dom';
-import toast, { Toaster } from "react-hot-toast";
-
+import toast from "react-hot-toast";
 
 const Navbar = () => {
  const user = getCurrentUser();
@@ -18,23 +17,23 @@ const Navbar = () => {
 
 
  return (
-   <nav className="bg-blue-500 text-white py-4">
+   <nav className="bg-blue-500 text-white py-4 sticky top-0 z-50 shadow-md">
      <div className="container mx-auto flex items-center justify-between px-4">
        {/* Website Name */}
-       <Link to="/" className="text-xl font-bold">
+       <Link to="/" className="text-xl font-playwrite">
       Cartify
        </Link>
 
 
        {/* Navigation Links */}
        <div className="flex items-center space-x-4">
-         <Link to="/" className="hover:text-blue-200">
+         <Link to="/" className="hover:text-blue-200 font-funnel text-lg">
            Home
          </Link>
-         <Link to="/user/cart" className="hover:text-blue-200">
+         {/* <Link to="/user/cart" className="hover:text-blue-200">
            Cart
-         </Link>
-         <Link to="/user/orders" className="hover:text-blue-200">
+         </Link> */}
+         <Link to="/user/orders" className="hover:text-blue-200 font-funnel text-lg">
            Orders
          </Link>
 
@@ -42,10 +41,10 @@ const Navbar = () => {
          {/* User Info or Auth Links */}
          {user ? (
            <div className="flex items-center space-x-2">
-             <span className="text-sm">Welcome, {user.username || user.email || 'User'}</span>
+             <span className="font-funnel text-sm">Welcome, {user.username || user.email || 'User'}</span>
              <button
                onClick={handleLogout}
-               className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-md text-sm focus:outline-none focus:shadow-outline"
+               className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-md text-sm font-funnel focus:outline-none focus:shadow-outline"
              >
                Logout
              </button>

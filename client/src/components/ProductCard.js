@@ -23,13 +23,14 @@ function ProductCard({
   const [currentImage, setCurrentImage] = useState(images[0]);
   const [quantity, setQuantity] = useState(1);
 
-  const leftArrowClick = () => {
+ 
+   const leftArrowClick = () => {
     const currentIndex = images.indexOf(currentImage);
     const newIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
     setCurrentImage(images[newIndex]);
   };
 
-  const rightArrowClick = () => {
+   const rightArrowClick = () => {
     const currentIndex = images.indexOf(currentImage);
     const newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
     setCurrentImage(images[newIndex]);
@@ -63,6 +64,14 @@ function ProductCard({
     localStorage.setItem("cart", JSON.stringify(cart));
 
     toast.success("Product added to cart");
+  };
+
+   const handleDecrease = () => {
+    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  };
+
+  const handleIncrease = () => {
+    setQuantity((prev) => (prev < 5 ? prev + 1 : 5));
   };
 
   return (
@@ -113,12 +122,12 @@ function ProductCard({
       <div className="flex justify-center items-center">
         <MinusIcon
           className="cursor-pointer"
-          onClick={() => setQuantity(quantity - 1)}
+          onClick={handleDecrease}
         />
         <span className="mx-2 text-xl">{quantity}</span>
         <PlusIcon
           className="cursor-pointer"
-          onClick={() => setQuantity(quantity + 1)}
+          onClick={handleIncrease}
         />
       </div>
 

@@ -133,12 +133,7 @@ function Cart() {
         phone: phone,
       };
 
-      console.log(
-        "Final Order Body Before API Call:",
-        JSON.stringify(orderBody, null, 2)
-      ); 
-
-      const response = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_API_URL}/orders`,
         orderBody,
         {
@@ -148,8 +143,6 @@ function Cart() {
         }
       );
 
-      console.log("API Response:", response);
-
       toast.success("Order Placed Successfully");
       toast.success("Payment Successful");
 
@@ -158,7 +151,6 @@ function Cart() {
         window.location.href = "/user/orders";
       }, 2000);
     } catch (error) {
-      console.error("Error placing order:", error);
       toast.error(
         error.response?.data?.message ||
           "Failed to place order. Please try again."
