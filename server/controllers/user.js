@@ -60,14 +60,12 @@ const postSignup = async (req, res) => {
     });
   } catch (error) {
     if (error.message.includes("duplicate key error")) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: `${Object.keys(error.keyValue)} '${Object.values(
-            error.keyValue
-          )}' already exists`,
-        });
+      return res.status(400).json({
+        success: false,
+        message: `${Object.keys(error.keyValue)} '${Object.values(
+          error.keyValue
+        )}' already exists`,
+      });
     }
     return res.status(400).json({
       success: false,
@@ -76,7 +74,7 @@ const postSignup = async (req, res) => {
   }
 };
 
-//LOGIN
+// LOGIN
 const postLogin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -89,12 +87,10 @@ const postLogin = async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: "Please signup first before logging in",
-      });
+    return res.status(400).json({
+      success: false,
+      message: "Please signup first before logging in",
+    });
   }
 
   const isPasswordMatch = bcrypt.compareSync(password, user.password);
@@ -110,14 +106,14 @@ const postLogin = async (req, res) => {
     const jwtToken = jwt.sign(userDetails, process.env.JWT_SECRET);
 
     res.setHeader("Authorization", `Bearer ${jwtToken}`);
-    // res.cookie("jwt", jwtToken, { httpOnly: true, secure: true }); 
+    // res.cookie("jwt", jwtToken, { httpOnly: true, secure: true });
     res.cookie("jwt", jwtToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'None',
-    maxAge: 60 * 60 * 1000,
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 60 * 60 * 1000,
     });
-    
+
     req.session.jwtToken = jwtToken;
 
     return res.json({

@@ -4,7 +4,8 @@ import { Copy as CopyIcon } from "lucide-react";
 import toast from "react-hot-toast";
 
 function OrderCard({ order, onClick }) {
-  const { _id, status, products, createdAt, totalBill, deliveryAddress } = order;
+  const { _id, status, products, createdAt, totalBill, deliveryAddress } =
+    order;
 
   const formatPrice = (amount) => {
     return new Intl.NumberFormat("en-IN", {
@@ -12,7 +13,9 @@ function OrderCard({ order, onClick }) {
       currency: "INR",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(amount).replace("₹", "₹ ");
+    })
+      .format(amount)
+      .replace("₹", "₹ ");
   };
 
   const copyOrderId = () => {
@@ -39,24 +42,34 @@ function OrderCard({ order, onClick }) {
             <CopyIcon size={18} />
           </button>
         </p>
-        <p className="text-sm text-gray-500">{getReadableTimestamp(createdAt)}</p>
+        <p className="text-sm text-gray-500">
+          {getReadableTimestamp(createdAt)}
+        </p>
       </div>
 
       {/* Products */}
       <p className="text-lg font-bold mt-3">
-        {products.map((product) => (product.productId?.name || "Unknown Product")).join(", ")}
+        {products
+          .map((product) => product.productId?.name || "Unknown Product")
+          .join(", ")}
       </p>
 
       {/* Total Amount */}
       <p className="text-lg text-green-600 mt-2">
-        <span className="font-semibold text-black">Total Amount:</span> {formatPrice(totalBill)}
+        <span className="font-semibold text-black">Total Amount:</span>{" "}
+        {formatPrice(totalBill)}
       </p>
 
       {/* Address */}
-      <p className="text-gray-600 mt-2"><span className="font-semibold">Delivery Address:</span> {deliveryAddress}</p>
+      <p className="text-gray-600 mt-2">
+        <span className="font-semibold">Delivery Address:</span>{" "}
+        {deliveryAddress}
+      </p>
 
       {/* Status */}
-      <p className="text-gray-600 mt-2"><span className="font-semibold">Status:</span> {status}</p>
+      <p className="text-gray-600 mt-2">
+        <span className="font-semibold">Status:</span> {status}
+      </p>
     </div>
   );
 }

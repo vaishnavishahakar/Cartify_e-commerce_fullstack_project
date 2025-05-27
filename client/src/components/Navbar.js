@@ -14,22 +14,23 @@ const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
-    // Update cart count when component mounts or cart changes
-    const updateCartCount = () => {
-      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-      setCartCount(totalItems);
-    };
+  const updateCartCount = () => {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  const uniqueProducts = new Set(cart.map(item => item.productId)); // Count unique product IDs
+setCartCount(uniqueProducts.size);
 
-    updateCartCount();
+  };
 
-    // Listen for storage change (when items are added to cart dynamically)
-    window.addEventListener("storage", updateCartCount);
+  updateCartCount();
 
-    return () => {
-      window.removeEventListener("storage", updateCartCount);
-    };
-  }, []);
+  // Listen for cart changes across the site
+  window.addEventListener("storage", updateCartCount);
+
+  return () => {
+    window.removeEventListener("storage", updateCartCount);
+  };
+}, []);
+
 
   const handleLogout = () => {
     logout();

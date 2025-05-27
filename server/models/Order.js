@@ -42,7 +42,7 @@ const orderSchema = new Schema(
     },
     paymentId: {
       type: Schema.Types.ObjectId,
-      ref: "Payment"
+      ref: "Payment",
     },
     status: {
       type: String,

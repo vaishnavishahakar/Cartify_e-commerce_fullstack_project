@@ -22,12 +22,8 @@ function ProductCard({
 }) {
   const [currentImage, setCurrentImage] = useState(images[0]);
   const [quantity, setQuantity] = useState(1);
-  const [cart, setCart] = useState([]);
-
   useEffect(() => {
-    // Load cart data and check if the product exists
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    setCart(storedCart);
 
     const productInCart = storedCart.find((item) => item.productId === _id);
     if (productInCart) {
@@ -53,13 +49,20 @@ function ProductCard({
   };
 
   const handleAddToCart = () => {
-    let updatedCart = [...cart];
-    const existingProductIndex = updatedCart.findIndex((item) => item.productId === _id);
+    // Get existing cart data or set an empty array if it doesn't exist
+    let storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    // Check if product already exists in the cart
+    const existingProductIndex = storedCart.findIndex(
+      (item) => item.productId === _id
+    );
 
     if (existingProductIndex > -1) {
-      updatedCart[existingProductIndex].quantity = quantity;
+      // If product exists, update its quantity
+      storedCart[existingProductIndex].quantity = quantity;
     } else {
-      updatedCart.push({
+      // Otherwise, add new product to cart
+      storedCart.push({
         productId: _id,
         name,
         image: currentImage,
@@ -68,8 +71,13 @@ function ProductCard({
       });
     }
 
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    // Update local storage with new cart data
+    localStorage.setItem("cart", JSON.stringify(storedCart));
+
+    // Notify other components (Navbar) to refresh
+    window.dispatchEvent(new Event("storage"));
+
+    // Show success message
     toast.success("Product added to cart!");
   };
 
@@ -78,7 +86,13 @@ function ProductCard({
       <LeftArrow
         size={20}
         className="absolute left-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
-        onClick={() => setCurrentImage(images[(images.indexOf(currentImage) - 1 + images.length) % images.length])}
+        onClick={() =>
+          setCurrentImage(
+            images[
+              (images.indexOf(currentImage) - 1 + images.length) % images.length
+            ]
+          )
+        }
       />
 
       <div className="flex flex-col items-center w-full">
@@ -86,18 +100,30 @@ function ProductCard({
           {category}
         </span>
         <div className="relative h-48 flex justify-center items-center">
-          <img src={currentImage} alt={name} className="w-full h-40 object-contain object-center" />
+          <img
+            src={currentImage}
+            alt={name}
+            className="w-full h-40 object-contain object-center"
+          />
         </div>
 
-        <h1 className="font-bold text-lg text-center mt-2">{shortText(name, 30)}</h1>
-        <p className="text-sm text-gray-600 text-center">{shortText(shortDescription, 70)}</p>
+        <h1 className="font-bold text-lg text-center mt-2">
+          {shortText(name, 30)}
+        </h1>
+        <p className="text-sm text-gray-600 text-center">
+          {shortText(shortDescription, 70)}
+        </p>
 
         <p className="my-1 text-center">
-          <span className="font-extrabold text-2xl">{formatPrice(currentPrice)}</span>
+          <span className="font-extrabold text-2xl">
+            {formatPrice(currentPrice)}
+          </span>
         </p>
 
         <p className="my-0 text-center">
-          <span className="text-sm text-gray-500 line-through">{formatPrice(price)}</span>
+          <span className="text-sm text-gray-500 line-through">
+            {formatPrice(price)}
+          </span>
         </p>
 
         <div className="flex justify-between items-center mt-5 w-full">
@@ -119,7 +145,11 @@ function ProductCard({
       <RightArrow
         size={20}
         className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
-        onClick={() => setCurrentImage(images[(images.indexOf(currentImage) + 1) % images.length])}
+        onClick={() =>
+          setCurrentImage(
+            images[(images.indexOf(currentImage) + 1) % images.length]
+          )
+        }
       />
     </div>
   );

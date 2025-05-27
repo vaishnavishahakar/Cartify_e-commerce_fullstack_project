@@ -43,7 +43,7 @@ function Signup() {
         window.location.href = "/login";
       }, 3000);
     } catch (err) {
-        toast.dismiss();
+      toast.dismiss();
       setError(err?.response?.data?.message);
       toast.error(err?.response?.data?.message);
     }
@@ -62,88 +62,90 @@ function Signup() {
   }, []);
 
   return (
-  <div className="min-h-screen flex flex-col items-center justify-center px-5">
-    {/* Signup Title */}
-    <h1 className="text-4xl font-extrabold text-center mb-6 mt-5 text-gray-800">
-      Create Your Account
-    </h1>
+    <div className="min-h-screen flex flex-col items-center justify-center px-5">
+      {/* Signup Title */}
+      <h1 className="text-4xl font-extrabold text-center mb-6 mt-5 text-gray-800">
+        Create Your Account
+      </h1>
 
-    {/* Signup Card */}
-    <div className="w-full md:w-[450px] bg-white rounded-xl shadow-xl hover:shadow-2xl px-10 py-8 transition duration-300 border border-gray-200">
-      <Input
-        label={"Name"}
-        val={signupData.name}
-        onChange={(val) => setSignupData({ ...signupData, name: val })}
-        className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
-      />
-
-      <Input
-        label={"Email"}
-        val={signupData.email}
-        onChange={(val) => setSignupData({ ...signupData, email: val })}
-        className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
-      />
-
-      <Input
-        label={"Phone"}
-        val={signupData.phone}
-        onChange={(val) => setSignupData({ ...signupData, phone: val })}
-        className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
-      />
-
-      <Input
-        label={"Address"}
-        val={signupData.address}
-        onChange={(val) => setSignupData({ ...signupData, address: val })}
-        className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
-      />
-
-      <Input
-        label={"Password"}
-        type="password"
-        val={signupData.password}
-        onChange={(val) => setSignupData({ ...signupData, password: val })}
-        className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
-      />
-
-      <Input
-        label={"Re-enter Password"}
-        type="password"
-        val={signupData.rePassword}
-        onChange={(val) => setSignupData({ ...signupData, rePassword: val })}
-        className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
-      />
-
-      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-
-      <p className="mt-4 text-center">
-        Already have an account?{" "}
-        <Link to="/login" className="text-blue-500 font-semibold hover:underline">
-          Login
-        </Link>
-      </p>
-
-      {/* Buttons */}
-      <div className="flex justify-around mt-6">
-        <Button
-          label={"Cancel"}
-          onClick={() => window.location.href = "/"}
-          variant={"danger"}
-          className="bg-red-500 hover:bg-red-600 text-white font-semibold px-5 py-2 rounded-md transition"
+      {/* Signup Card */}
+      <div className="w-full md:w-[450px] bg-white rounded-xl shadow-xl hover:shadow-2xl px-10 py-8 transition duration-300 border border-gray-200">
+        <Input
+          label={"Name"}
+          val={signupData.name}
+          onChange={(val) => setSignupData({ ...signupData, name: val })}
+          className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
         />
-        <Button
-          label="Signup"
-          onClick={processSignup}
-          variant={"primary"}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-5 py-2 rounded-md transition"
+
+        <Input
+          label={"Email"}
+          val={signupData.email}
+          onChange={(val) => setSignupData({ ...signupData, email: val })}
+          className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
         />
+
+        <Input
+          label={"Phone"}
+          val={signupData.phone}
+          onChange={(val) => setSignupData({ ...signupData, phone: val })}
+          className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
+        />
+
+        <Input
+          label={"Address"}
+          val={signupData.address}
+          onChange={(val) => setSignupData({ ...signupData, address: val })}
+          className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
+        />
+
+        <Input
+          label={"Password"}
+          type="password"
+          val={signupData.password}
+          onChange={(val) => setSignupData({ ...signupData, password: val })}
+          className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
+        />
+
+        <Input
+          label={"Re-enter Password"}
+          type="password"
+          val={signupData.rePassword}
+          onChange={(val) => setSignupData({ ...signupData, rePassword: val })}
+          className="border-2 border-gray-300 rounded-md px-4 py-2 focus:border-blue-500"
+        />
+
+        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
+        <p className="mt-4 text-center">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-blue-500 font-semibold hover:underline"
+          >
+            Login
+          </Link>
+        </p>
+
+        {/* Buttons */}
+        <div className="flex justify-around mt-6">
+          <Button
+            label={"Cancel"}
+            onClick={() => (window.location.href = "/")}
+            variant={"danger"}
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-5 py-2 rounded-md transition"
+          />
+          <Button
+            label="Signup"
+            onClick={processSignup}
+            variant={"primary"}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-5 py-2 rounded-md transition"
+          />
+        </div>
       </div>
+
+      <Toaster />
     </div>
-
-    <Toaster />
-  </div>
-);
-
+  );
 }
 
 export default Signup;

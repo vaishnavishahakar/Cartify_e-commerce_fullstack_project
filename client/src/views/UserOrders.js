@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import OrderCard from "../components/OrderCard";
-import { getCurrentUser, getJwtToken, getReadableTimestamp, api } from "../utils/Common";
+import {
+  getCurrentUser,
+  getJwtToken,
+  getReadableTimestamp,
+  api,
+} from "../utils/Common";
 
 function UserOrders() {
   const [user, setUser] = useState({});
   const [orders, setOrders] = useState([]);
 
-  // const loadUserOrders = async () => {
-  // if (!user?._id) {
-  //   toast.error("User not found");
-  //   return;
-  // }
   const loadUserOrders = useCallback(async () => {
     if (!user?._id) {
       toast.error("User not found");
@@ -31,7 +31,6 @@ function UserOrders() {
       toast.error(error.response?.data?.message || "Failed to load orders");
     }
   }, [user?._id]);
-
 
   useEffect(() => {
     const currentUser = getCurrentUser();
@@ -128,7 +127,6 @@ function UserOrders() {
 
   return (
     <div className="relative p-6">
-
       <h1 className="text-5xl font-extrabold text-center py-10 text-blue-600">
         My Orders
       </h1>

@@ -38,16 +38,16 @@ const getReadableTimestamp = (date) => {
   return `${datePart} ${timePart} ${amOrPm}`;
 };
 
-const shortText= (text, maxLength = 50)=>{
-  if(!text){
-      return " ";
+const shortText = (text, maxLength = 50) => {
+  if (!text) {
+    return " ";
   }
 
-  if(text.length <= maxLength) {
+  if (text.length <= maxLength) {
     return text;
   }
 
-  let shortText = text.substring(0, maxLength-3);
+  let shortText = text.substring(0, maxLength - 3);
 
   shortText += "...";
 
@@ -55,8 +55,15 @@ const shortText= (text, maxLength = 50)=>{
 };
 
 const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
-    withCredentials: true,
+  baseURL: process.env.REACT_APP_API_URL,
+  withCredentials: true,
 });
 
-export { getCurrentUser, getJwtToken, logout, getReadableTimestamp, shortText, api };
+export {
+  getCurrentUser,
+  getJwtToken,
+  logout,
+  getReadableTimestamp,
+  shortText,
+  api,
+};

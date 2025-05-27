@@ -20,19 +20,20 @@ function Cart() {
     setCart(storedCart);
   };
 
-  const removeItemFromCart = (productId) => {
-    const indexOfProduct = cart.findIndex(
-      (product) => product.productId === productId
-    );
+ const removeItemFromCart = (productId) => {
+  let updatedCart = cart.filter((product) => product.productId !== productId);
 
-    if (indexOfProduct > -1) {
-      cart.splice(indexOfProduct, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      loadCart();
-    }
+  // Update local storage
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
 
-    toast.success("Product removed from cart");
-  };
+  // Trigger re-render in Navbar
+  window.dispatchEvent(new Event("storage"));
+
+  // Update cart state
+  setCart(updatedCart);
+
+  toast.success("Product removed from cart");
+};
 
   useEffect(() => {
     let totalVal = 0;

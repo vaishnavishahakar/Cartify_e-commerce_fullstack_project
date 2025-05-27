@@ -39,8 +39,7 @@ const postProducts = async (req, res) => {
     category,
     images,
     tags,
-  }
-  ) ;
+  });
 
   try {
     const savedProduct = await newProduct.save();
