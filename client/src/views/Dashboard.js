@@ -40,54 +40,40 @@ function Dashboard() {
 
   return (
     <div>
-      <h1 className="text-center py-4 text-2xl">Dashboard</h1>
+      <h1 className="text-center py-6 text-3xl font-extrabold text-gray-800">Dashboard</h1>
 
-      <div className="bg-white w-[500px] mx-auto px-10 pb-10 rounded-lg shadow-lg mt-10">
-        <div className="flex mb-10">
-          <Link
-            to="/user/orders"
-            className="block text-center text-md mx-1 bg-blue-100 p-2"
-          >
-            <TruckIcon className="mx-auto inline" size={24} />
-            <span className="ms-2">My Orders</span>
-          </Link>
-
-          <Link
-            to="/orders"
-            className="block text-center text-md mx-1 bg-blue-100 p-2"
-          >
-            <TruckIcon className="mx-auto inline" size={24} />
-            <span className="ms-2">My Orders</span>
-          </Link>
-
-          <Link
-            to="/orders"
-            className="block text-center text-md mx-1 bg-blue-100 p-2"
-          >
-            <TruckIcon className="mx-auto inline" size={24} />
-            <span className="ms-2">My Orders</span>
+      <div className="bg-white w-[500px] mx-auto px-8 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 mt-10">
+        {/* Order Links */}
+        <div className="flex justify-around mb-6">
+          <Link to="/user/orders" className="text-center text-md bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+            <TruckIcon className="mx-auto inline" size={24} /> <span className="ms-2">My Orders</span>
           </Link>
         </div>
 
-        <UserDetailRow icon={<NameIcon />} value={user?.name} />
-        <UserDetailRow icon={<MailIcon />} value={user?.email} />
-        <UserDetailRow icon={<RoleIcon />} value={user?.role} />
+        {/* User Details */}
+        <div className="flex flex-col gap-4">
+          <UserDetailRow icon={<NameIcon className="text-blue-500" />} value={user?.name} />
+          <UserDetailRow icon={<MailIcon className="text-blue-500" />} value={user?.email} />
+          <UserDetailRow icon={<RoleIcon className="text-blue-500" />} value={user?.role} />
+        </div>
 
+        {/* Logout Button */}
         <button
           type="button"
-          className="mx-auto block bg-red-500 text-white px-4 py-2 mt-4 rounded-md"
+          className="mx-auto block bg-red-500 text-white font-semibold px-5 py-2 mt-6 rounded-lg hover:bg-red-600 transition-all"
           onClick={() => {
             toast.success("Logged out successfully");
             logout();
           }}
         >
-          Logout
-          <LogOutIcon className="inline ms-4" />
+          Logout <LogOutIcon className="inline ms-2" />
         </button>
       </div>
+
       <Toaster />
     </div>
   );
 }
+
 
 export default Dashboard;

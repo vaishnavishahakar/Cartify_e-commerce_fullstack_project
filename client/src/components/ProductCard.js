@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChevronLeft as LeftArrow,
   Minus as MinusIcon,
@@ -22,122 +22,105 @@ function ProductCard({
 }) {
   const [currentImage, setCurrentImage] = useState(images[0]);
   const [quantity, setQuantity] = useState(1);
+  const [cart, setCart] = useState([]);
 
- 
-   const leftArrowClick = () => {
-    const currentIndex = images.indexOf(currentImage);
-    const newIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
-    setCurrentImage(images[newIndex]);
-  };
+  useEffect(() => {
+    // Load cart data and check if the product exists
+    const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCart(storedCart);
 
-   const rightArrowClick = () => {
-    const currentIndex = images.indexOf(currentImage);
-    const newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
-    setCurrentImage(images[newIndex]);
-  };
-
-  const handleAddToCart = () => {
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    const product = {
-      productId: _id,
-      name: name,
-      image: currentImage,
-      quantity: quantity,
-      price: currentPrice,
-    };
-
-    let exitingProductIndex = -1;
-
-    cart.forEach((item, index) => {
-      if (item.productId === _id) {
-        exitingProductIndex = index;
-      }
-    });
-
-    if (exitingProductIndex > -1) {
-      cart[exitingProductIndex].quantity = quantity;
-    } else {
-      cart.push(product);
+    const productInCart = storedCart.find((item) => item.productId === _id);
+    if (productInCart) {
+      setQuantity(productInCart.quantity);
     }
+  }, [_id]);
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    toast.success("Product added to cart");
+  const formatPrice = (amount) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
   };
 
-   const handleDecrease = () => {
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  const handleDecrease = () => {
+    setQuantity((prev) => Math.max(prev - 1, 1));
   };
 
   const handleIncrease = () => {
-    setQuantity((prev) => (prev < 5 ? prev + 1 : 5));
+    setQuantity((prev) => Math.min(prev + 1, 5));
+  };
+
+  const handleAddToCart = () => {
+    let updatedCart = [...cart];
+    const existingProductIndex = updatedCart.findIndex((item) => item.productId === _id);
+
+    if (existingProductIndex > -1) {
+      updatedCart[existingProductIndex].quantity = quantity;
+    } else {
+      updatedCart.push({
+        productId: _id,
+        name,
+        image: currentImage,
+        quantity,
+        price: currentPrice,
+      });
+    }
+
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    toast.success("Product added to cart!");
   };
 
   return (
-    <div
-      className="bg-white shadow-lg rounded-lg overflow-hidden m-5 px-10 py-5
-    max-w-[400px] relative"
-    >
-      <span
-        className="absolute top-0 right-0 bg-gray-500 text-white px-2 py-1
-        rounded-bl-lg"
-      >
-        {category}
-      </span>
-      <div className="relative h-40">
-        <LeftArrow
-          size={64}
-          className="absolute top-1/3 left-0 cursor-pointer"
-          onClick={leftArrowClick}
-        />
-        <img
-          src={currentImage}
-          alt={name}
-          className="w-full h-40 object-contain object-center"
-        />
-        <RightArrow
-          size={64}
-          className="absolute top-1/3 right-0 cursor-pointer"
-          onClick={rightArrowClick}
-        />
-      </div>
-      <p>
-        {tags.map((tag) => {
-          return (
-            <span className="bg-gray-200 text-gray-500 px-3 py-1 text-xs rounded-full mr-2">
-              {tag}
-            </span>
-          );
-        })}
-      </p>
+    <div className="bg-white shadow-lg rounded-xl overflow-hidden m-5 px-10 py-5 max-w-[400px] relative flex items-center">
+      <LeftArrow
+        size={20}
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+        onClick={() => setCurrentImage(images[(images.indexOf(currentImage) - 1 + images.length) % images.length])}
+      />
 
-      <h1 className="font-bold text-xl">{shortText(name, 30)}</h1>
-      <p className="text-sm">{shortText(shortDescription, 70)}</p>
+      <div className="flex flex-col items-center w-full">
+        <span className="absolute top-0 right-0 bg-gray-500 text-white px-2 py-1 rounded-bl-lg text-sm">
+          {category}
+        </span>
+        <div className="relative h-48 flex justify-center items-center">
+          <img src={currentImage} alt={name} className="w-full h-40 object-contain object-center" />
+        </div>
 
-      <p className="text-2xl my-2">
-        ₹ <del>{price}</del> <span className="font-bold">{currentPrice}</span>
-      </p>
+        <h1 className="font-bold text-lg text-center mt-2">{shortText(name, 30)}</h1>
+        <p className="text-sm text-gray-600 text-center">{shortText(shortDescription, 70)}</p>
 
-      <div className="flex justify-center items-center">
-        <MinusIcon
-          className="cursor-pointer"
-          onClick={handleDecrease}
-        />
-        <span className="mx-2 text-xl">{quantity}</span>
-        <PlusIcon
-          className="cursor-pointer"
-          onClick={handleIncrease}
-        />
+        <p className="my-1 text-center">
+          <span className="font-extrabold text-2xl">{formatPrice(currentPrice)}</span>
+        </p>
+
+        <p className="my-0 text-center">
+          <span className="text-sm text-gray-500 line-through">{formatPrice(price)}</span>
+        </p>
+
+        <div className="flex justify-between items-center mt-5 w-full">
+          <div className="flex items-center border border-gray-300 rounded-lg px-3 py-1">
+            <MinusIcon className="cursor-pointer" onClick={handleDecrease} />
+            <span className="mx-2 text-lg">{quantity}</span>
+            <PlusIcon className="cursor-pointer" onClick={handleIncrease} />
+          </div>
+
+          <Button
+            label="Add To Cart"
+            variant="primary"
+            className="px-5 py-2 font-semibold"
+            onClick={handleAddToCart}
+          />
+        </div>
       </div>
 
-      <div className="flex justify-center mt-5">
-        <Button
-          label="Add To Cart"
-          variant="primary"
-          onClick={handleAddToCart}
-        />
-      </div>
+      <RightArrow
+        size={20}
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+        onClick={() => setCurrentImage(images[(images.indexOf(currentImage) + 1) % images.length])}
+      />
     </div>
   );
 }

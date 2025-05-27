@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, Outlet, useLocation } from "react-router-dom";
 import Home from "./views/Home";
 import Signup from "./views/Signup";
 import Login from "./views/Login";
@@ -14,10 +14,6 @@ import Footer from "./components/Footer";
 
 // Layout Component to keep Navbar consistent
 const Layout = () => (
-  // <>
-  //   <Navbar />
-  //   <Outlet />
-  // </>
    <>
     <Navbar />
     <div className="min-h-[calc(100vh-160px)]">
@@ -27,13 +23,21 @@ const Layout = () => (
   </>
 );
 
+// Wrapper for Home to pass search from URL
+const HomeWrapper = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const search = queryParams.get("search") || "";
+  return <Home search={search} />;
+};
+
 // Create Router
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />, // 👈 Define a parent layout
     children: [
-      { path: '', element: <Home /> }, // 👈 Nested inside the parent
+      { path: '', element: <HomeWrapper /> }, // 👈 Nested inside the parent
       { path: 'signup', element: <Signup /> },
       { path: 'login', element: <Login /> },
       { path: 'dashboard', element: <Dashboard /> },
