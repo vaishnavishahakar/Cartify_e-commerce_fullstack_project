@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { getCurrentUser, logout } from "../utils/Common";
-import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import { ShoppingCart } from "lucide-react";
 
-const Navbar = () => {
+const Navbar = ({ onSearch }) => {
   const user = getCurrentUser();
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,23 +13,23 @@ const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
-  const updateCartCount = () => {
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  const uniqueProducts = new Set(cart.map(item => item.productId)); // Count unique product IDs
-setCartCount(uniqueProducts.size);
+    setSearch(params.get("search") || "");
+  }, [location.search]);
 
-  };
+  useEffect(() => {
+    const updateCartCount = () => {
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const uniqueProducts = new Set(cart.map(item => item.productId));
+      setCartCount(uniqueProducts.size);
+    };
 
-  updateCartCount();
+    updateCartCount();
+    window.addEventListener("storage", updateCartCount);
 
-  // Listen for cart changes across the site
-  window.addEventListener("storage", updateCartCount);
-
-  return () => {
-    window.removeEventListener("storage", updateCartCount);
-  };
-}, []);
-
+    return () => {
+      window.removeEventListener("storage", updateCartCount);
+    };
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -38,20 +37,19 @@ setCartCount(uniqueProducts.size);
     navigate("/login");
   };
 
-  // Pass search term via query params
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearch(value);
     navigate(`/?search=${value}`);
+    if (onSearch) {
+      onSearch(value);
+    }
   };
 
   return (
     <nav className="bg-blue-500 text-white py-4 sticky top-0 z-50 shadow-md">
       <div className="container mx-auto flex items-center justify-between px-4">
-        {/* Website Name */}
-        <Link to="/" className="text-xl font-playwrite">
-          Cartify
-        </Link>
+        <Link to="/" className="text-xl font-playwrite">Cartify</Link>
 
         {/* Search Input */}
         <div className="w-full sm:w-full md:w-[40%] mx-auto px-6">
@@ -66,22 +64,12 @@ setCartCount(uniqueProducts.size);
 
         {/* Navigation Links */}
         <div className="flex items-center space-x-6">
-          <Link to="/" className="hover:text-blue-200 font-funnel text-lg">
-            Home
-          </Link>
-          <Link
-            to="/user/orders"
-            className="hover:text-blue-200 font-funnel text-lg"
-          >
-            Orders
-          </Link>
-
-          {/* Cart Icon with Live Count */}
+          <Link to="/" className="hover:text-blue-200 font-funnel text-lg">Home</Link>
+          <Link to="/user/orders" className="hover:text-blue-200 font-funnel text-lg">Orders</Link>
+          
+          {/* Cart Icon */}
           <Link to="/user/cart" className="relative flex items-center">
-            <ShoppingCart
-              size={24}
-              className="text-white hover:text-blue-200"
-            />
+            <ShoppingCart size={24} className="text-white hover:text-blue-200"/>
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full px-2 py-0">
                 {cartCount}
@@ -89,35 +77,18 @@ setCartCount(uniqueProducts.size);
             )}
           </Link>
 
-          {/* User Info or Auth Links */}
+          {/* Auth Links */}
           {user ? (
             <div className="flex items-center space-x-2">
-              <Link to="/dashboard" className="relative flex items-center">
-                <span className="font-funnel text-sm">
-                  Welcome, {user.name || user.email || "User"}
-                </span>
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-md text-sm font-funnel focus:outline-none focus:shadow-outline"
-              >
+              <Link to="/dashboard" className="font-funnel text-sm">Welcome, {user.name || user.email || "User"}</Link>
+              <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-md text-sm font-funnel">
                 Logout
               </button>
             </div>
           ) : (
             <div className="space-x-2">
-              <Link
-                to="/login"
-                className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded-md text-sm focus:outline-none focus:shadow-outline"
-              >
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className="bg-yellow-500 hover:bg-yellow-700 text-white font-semibold py-2 px-3 rounded-md text-sm focus:outline-none focus:shadow-outline"
-              >
-                Sign Up
-              </Link>
+              <Link to="/login" className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded-md text-sm">Login</Link>
+              <Link to="/signup" className="bg-yellow-500 hover:bg-yellow-700 text-white font-semibold py-2 px-3 rounded-md text-sm">Sign Up</Link>
             </div>
           )}
         </div>
